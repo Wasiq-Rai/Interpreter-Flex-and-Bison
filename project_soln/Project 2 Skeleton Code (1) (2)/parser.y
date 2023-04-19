@@ -4,6 +4,7 @@
 %{
 
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -39,18 +40,18 @@ void yyerror(const char* message);
 %%
 
 function:	
-	function_header variable_list body ;
-	
+	function_header body ;
+
 function_header:	
-	FUNCTION IDENTIFIER RETURNS type ';' ;
+	FUNCTION IDENTIFIER parameters RETURNS type ';' ;
 
-variable_list:
-	variable |
-	variable_list variable |
-	;
+parameters:
+	/* empty */ |
+	parameters_list ;
 
-variable:
-	IDENTIFIER ':' type IS statement ';' ;
+parameters_list:
+	parameters_list ',' IDENTIFIER ':' type |
+	IDENTIFIER ':' type ;
 
 type:
 	INTEGER |
@@ -123,4 +124,4 @@ int main(int argc, char *argv[])
 	yyparse();
 	lastLine();
 	return 0;
-} 
+}
