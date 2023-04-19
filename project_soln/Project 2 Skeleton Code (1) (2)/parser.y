@@ -40,10 +40,18 @@ void yyerror(const char* message);
 %%
 
 function:	
-	function_header body ;
+	function_header optional_variable body ;
 
 function_header:	
 	FUNCTION IDENTIFIER parameters RETURNS type ';' ;
+
+
+optional_variable:
+	variable optional_variable|  
+	;
+
+variable:
+	IDENTIFIER ':' type IS statement ';' ;
 
 parameters:
 	/* empty */ |

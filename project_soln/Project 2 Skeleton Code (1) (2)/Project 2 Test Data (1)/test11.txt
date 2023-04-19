@@ -1,4 +1,4 @@
-// Arithmetic operators
+-- Arithmetic operators
 
 function main returns integer;
 begin
