@@ -26,11 +26,10 @@ void yyerror(const char* message);
 %left MULOP
 %left RELOP
 %left ANDOP
+%left OROP
+%left NOTOP
 %left REMOP
-%token REMOP
 %right EXP
-%token EXP
-
 
 %token IS
 %token REAL
@@ -43,6 +42,7 @@ void yyerror(const char* message);
 %token REPEAT UNTIL
 %token NULL_STATEMENT
 %token statement_seq
+
 %%
 
 function:	
@@ -53,7 +53,7 @@ function_header:
 
 
 optional_variable:
-	variable optional_variable|  
+	variable optional_variable |  
 	;
 
 variable:
@@ -96,6 +96,9 @@ case_list:
 operator:
 	ADDOP |
 	MULOP |
+	ANDOP |
+	OROP  |
+	NOTOP |
 	RELOP ;
 
 reductions:
@@ -104,6 +107,7 @@ reductions:
 		    
 expression:
 	expression ANDOP relation |
+	expression OROP relation |
 	relation ;
 
 relation:
@@ -128,7 +132,8 @@ primary:
 	REAL_LITERAL |
 	BOOL_LITERAL |
 	IDENTIFIER |
-	primary EXP primary ;
+	primary EXP primary |
+	NOTOP primary;
 ;
 
 %%

@@ -32,6 +32,8 @@ real		{digit}+\.{digit}*(E[+-]?{digit}+)?
 "<"      { ECHO; return(RELOP); }
 ">"      { ECHO; return(RELOP); }
 ">="     { ECHO; return(RELOP); }
+"<="     { ECHO; return(RELOP); }
+"/="     { ECHO; return(RELOP); }
 "*"      { ECHO; return(MULOP); }
 "-"      { ECHO; return(ADDOP); }
 "/"      { ECHO; return(MULOP); }
@@ -57,6 +59,8 @@ others		{ ECHO; return(OTHERWISE); }
 reduce		{ ECHO; return REDUCE; }
 returns		{ ECHO; return(RETURNS); }
 and		{ ECHO; return(ANDOP); }
+not		{ ECHO; return(NOTOP); }
+or		{ ECHO; return(OROP); }
 real		{ ECHO; return(REAL); }
 {real}		{ ECHO; return(REAL_LITERAL); }
 {id}		{ ECHO; return(IDENTIFIER);}
