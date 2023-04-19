@@ -39,13 +39,14 @@ void yyerror(const char* message);
 %%
 
 function:	
-	function_header optional_variable body ;
+	function_header variable_list body ;
 	
 function_header:	
 	FUNCTION IDENTIFIER RETURNS type ';' ;
 
-optional_variable:
+variable_list:
 	variable |
+	variable_list variable |
 	;
 
 variable:
