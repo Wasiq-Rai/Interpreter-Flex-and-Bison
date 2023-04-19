@@ -37,7 +37,8 @@ real		{digit}+\.{digit}*(E[+-]?{digit}+)?
 "/"      { ECHO; return(MULOP); }
 "="      { ECHO; return(RELOP); }
 "=>"     { ECHO; return(ARROW); }
-
+"**"     { ECHO; return(EXP); }
+rem      {ECHO; return(REMOP);}
 begin		{ ECHO; return(BEGIN_); }
 boolean		{ ECHO; return(BOOLEAN); }
 end		{ ECHO; return(END); }

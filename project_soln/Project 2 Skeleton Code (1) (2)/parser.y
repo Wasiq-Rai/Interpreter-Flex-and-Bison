@@ -26,6 +26,12 @@ void yyerror(const char* message);
 %left MULOP
 %left RELOP
 %left ANDOP
+%left REMOP
+%token REMOP
+%right EXP
+%token EXP
+
+
 %token IS
 %token REAL
 %token BEGIN_ BOOLEAN END ENDREDUCE FUNCTION INTEGER REDUCE RETURNS
@@ -106,10 +112,14 @@ relation:
 
 term:
 	term ADDOP factor |
+	term MULOP factor |
+	term REMOP factor |
 	factor ;
+
       
 factor:
 	factor MULOP primary |
+	factor REMOP primary |
 	primary ;
 
 primary:
@@ -117,7 +127,9 @@ primary:
 	INT_LITERAL |
 	REAL_LITERAL |
 	BOOL_LITERAL |
-	IDENTIFIER ;
+	IDENTIFIER |
+	primary EXP primary ;
+;
 
 %%
 
