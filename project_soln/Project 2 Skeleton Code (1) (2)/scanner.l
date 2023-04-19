@@ -23,8 +23,8 @@ id		[A-Za-z][A-Za-z0-9]*
 digit		[0-9]
 int		{digit}+
 punc		[\(\),:;]
+real		{digit}+\.{digit}*(E[+-]?{digit}+)?
 %%
-
 {ws}		{ ECHO; }
 {comment}	{ ECHO; nextLine();}
 {line}		{ ECHO; nextLine();}
@@ -41,11 +41,11 @@ is		{ ECHO; return(IS); }
 reduce		{ ECHO; return REDUCE; }
 returns		{ ECHO; return(RETURNS); }
 and		{ ECHO; return(ANDOP); }
+real		{ ECHO; return(REAL); }
+{real}		{ ECHO; return(REAL_LITERAL); }
 {id}		{ ECHO; return(IDENTIFIER);}
 {int}		{ ECHO; return(INT_LITERAL); }
 {punc}		{ ECHO; return(yytext[0]); }
 .		{ ECHO; appendError(LEXICAL, yytext); }
 
 %%
-
-
