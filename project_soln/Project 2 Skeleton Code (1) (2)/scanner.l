@@ -22,15 +22,21 @@ line		[\n]
 id		[A-Za-z][A-Za-z0-9]*
 digit		[0-9]
 int		{digit}+
-punc		[\(\),:;]
+punc		[(),:;]
 real		{digit}+\.{digit}*(E[+-]?{digit}+)?
 %%
 {ws}		{ ECHO; }
 {comment}	{ ECHO; nextLine();}
 {line}		{ ECHO; nextLine();}
-"<"		{ ECHO; return(RELOP); }
-"+"		{ ECHO; return(ADDOP); }
-"*"		{ ECHO; return(MULOP); }
+"+"      { ECHO; return(ADDOP); }
+"<"      { ECHO; return(RELOP); }
+">"      { ECHO; return(RELOP); }
+">="     { ECHO; return(RELOP); }
+"*"      { ECHO; return(MULOP); }
+"-"      { ECHO; return(ADDOP); }
+"/"      { ECHO; return(MULOP); }
+"="      { ECHO; return(RELOP); }
+
 begin		{ ECHO; return(BEGIN_); }
 boolean		{ ECHO; return(BOOLEAN); }
 end		{ ECHO; return(END); }
@@ -38,6 +44,10 @@ endreduce	{ ECHO; return(ENDREDUCE); }
 function	{ ECHO; return(FUNCTION); }
 integer		{ ECHO; return(INTEGER); }
 is		{ ECHO; return(IS); }
+if    { ECHO; return(IF); }
+then     { ECHO; return(THEN); }
+else     { ECHO; return(ELSE); }
+endif    { ECHO; return(ENDIF); }
 reduce		{ ECHO; return REDUCE; }
 returns		{ ECHO; return(RETURNS); }
 and		{ ECHO; return(ANDOP); }

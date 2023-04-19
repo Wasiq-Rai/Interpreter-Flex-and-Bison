@@ -25,12 +25,13 @@ void yyerror(const char* message);
 %left MULOP
 %left RELOP
 %left ANDOP
+%token IS
 %token REAL
-%token BEGIN_ BOOLEAN END ENDREDUCE FUNCTION INTEGER IS REDUCE RETURNS
+%token BEGIN_ BOOLEAN END ENDREDUCE FUNCTION INTEGER REDUCE RETURNS
 %token ASSIGNMENT
 %token IF THEN ELSE ENDIF
-%token CASE IS WHEN ARROW OTHERWISE ENDCASE
-%token WHILE DO END
+%token CASE WHEN ARROW OTHERWISE ENDCASE
+%token WHILE DO
 %token FOR BY
 %token REPEAT UNTIL
 %token NULL_STATEMENT
@@ -48,7 +49,7 @@ optional_variable:
 	;
 
 variable:
-	IDENTIFIER ':' type IS expression ';' ;
+	IDENTIFIER ':' type IS statement ';' ;
 
 type:
 	INTEGER |
@@ -65,10 +66,10 @@ statement_:
 statement:
 	expression |
 	REDUCE operator reductions ENDREDUCE |
-	IF expression THEN statement ELSE statement ENDIF ';' |
-	CASE expression IS case_list OTHERWISE statement ENDCASE ';' |
-	WHILE expression DO statement END ';' |
-	FOR IDENTIFIER ASSIGNMENT expression BY expression WHILE expression DO statement END ';' |
+	IF expression THEN statement_ ELSE statement_ ENDIF |
+	CASE expression IS case_list OTHERWISE statement_ ENDCASE ';' |
+	WHILE expression DO statement_ END ';' |
+	FOR IDENTIFIER ASSIGNMENT expression BY expression WHILE expression DO statement_ END ';' |
 	REPEAT statement_seq UNTIL expression ';' |
 	NULL_STATEMENT ';' ;
 
@@ -78,7 +79,8 @@ case_list:
 
 operator:
 	ADDOP |
-	MULOP ;
+	MULOP |
+	RELOP ;
 
 reductions:
 	reductions statement_ |
@@ -105,9 +107,7 @@ primary:
 	INT_LITERAL |
 	REAL_LITERAL |
 	BOOL_LITERAL |
-	IDENTIFIER |
-	REAL_LITERAL |
-	BOOL_LITERAL ;
+	IDENTIFIER ;
 
 %%
 
