@@ -1,4 +1,4 @@
-// Comprehensive test with nested case
+-- Comprehensive test with nested case
 
 function main a: integer, b: real returns real;
     c: integer is 8;
