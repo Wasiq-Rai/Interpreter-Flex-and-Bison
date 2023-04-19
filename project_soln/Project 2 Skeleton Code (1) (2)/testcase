@@ -1,0 +1,7 @@
+FUNCTION main() RETURNS VOID
+BEGIN
+  INTEGER a, b;
+  a = 5;
+  b = 10;
+END
+

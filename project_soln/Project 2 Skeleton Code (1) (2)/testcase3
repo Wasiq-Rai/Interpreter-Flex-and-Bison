@@ -1,0 +1,18 @@
+FUNCTION power(base: REAL, exponent: INTEGER) RETURNS REAL;
+BEGIN
+    REAL result;
+    IF exponent < 0 THEN
+        result = 1.0 / power(base, -exponent);
+    ELSEIF exponent = 0 THEN
+        result = 1.0;
+    ELSE
+        INTEGER i;
+        result = base;
+        FOR i = 1 TO exponent - 1 DO
+            result = result * base;
+        ENDFOR;
+    ENDIF;
+    RETURN result;
+END;
+
+

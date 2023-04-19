@@ -1,0 +1,19 @@
+1 -- Multiple errors
+ 2
+ 3 function main a integer returns real;
+Syntax Error, Unexpected INTEGER, expecting ':'
+ 4 b: integer is * 2;
+Syntax Error, Unexpected MULOP
+ 5 c: real is 6.0;
+ 6 begin
+ 7 if a > c then
+ 8 b 3.0;
+Syntax Error, Unexpected REAL_LITERAL, expecting ';'
+ 9 else
+ 10 b = 4.;
+ 11 endif;
+ 12 ;
+Syntax Error, Unexpected ';', expecting END
+Lexical Errors 0
+Syntax Errors 4
+Semantic Errors 0
