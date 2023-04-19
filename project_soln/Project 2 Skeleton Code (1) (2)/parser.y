@@ -67,14 +67,14 @@ statement:
 	expression |
 	REDUCE operator reductions ENDREDUCE |
 	IF expression THEN statement_ ELSE statement_ ENDIF |
-	CASE expression IS case_list OTHERWISE statement_ ENDCASE ';' |
+	CASE expression IS case_list OTHERWISE ARROW statement_ ENDCASE  |
 	WHILE expression DO statement_ END ';' |
 	FOR IDENTIFIER ASSIGNMENT expression BY expression WHILE expression DO statement_ END ';' |
 	REPEAT statement_seq UNTIL expression ';' |
 	NULL_STATEMENT ';' ;
 
 case_list:
-	WHEN INT_LITERAL ARROW statement case_list |
+	WHEN INT_LITERAL ARROW statement_ case_list |
 	;
 
 operator:

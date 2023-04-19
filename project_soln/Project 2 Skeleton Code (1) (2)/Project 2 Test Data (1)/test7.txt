@@ -1,4 +1,4 @@
-// Case selection
+-- Case selection
 
 function main returns integer;
     a: integer is 4 + 2;

@@ -36,6 +36,7 @@ real		{digit}+\.{digit}*(E[+-]?{digit}+)?
 "-"      { ECHO; return(ADDOP); }
 "/"      { ECHO; return(MULOP); }
 "="      { ECHO; return(RELOP); }
+"=>"     { ECHO; return(ARROW); }
 
 begin		{ ECHO; return(BEGIN_); }
 boolean		{ ECHO; return(BOOLEAN); }
@@ -48,6 +49,10 @@ if    { ECHO; return(IF); }
 then     { ECHO; return(THEN); }
 else     { ECHO; return(ELSE); }
 endif    { ECHO; return(ENDIF); }
+case		{ ECHO; return(CASE); }
+when		{ ECHO; return(WHEN); }
+endcase		{ ECHO; return(ENDCASE); }
+others		{ ECHO; return(OTHERWISE); }
 reduce		{ ECHO; return REDUCE; }
 returns		{ ECHO; return(RETURNS); }
 and		{ ECHO; return(ANDOP); }
