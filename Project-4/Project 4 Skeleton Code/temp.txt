@@ -1,0 +1,9 @@
+Types checkArithmetic(Types left, Types right) {
+    if (left == MISMATCH || right == MISMATCH)
+        return MISMATCH;
+    if (left != INT_TYPE && left != REAL_TYPE || right != INT_TYPE && right != REAL_TYPE) {
+        appendError(GENERAL_SEMANTIC, "Numeric Type Required");
+        return MISMATCH;
+    }
+    return left == REAL_TYPE || right == REAL_TYPE ? REAL_TYPE : INT_TYPE;
+}
