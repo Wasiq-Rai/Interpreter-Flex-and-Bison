@@ -2,7 +2,7 @@
    Dr. Duane J. Jarc */
 
 %{
-
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -137,16 +137,22 @@ primary:
 ;
 
 %%
+bool success = true;
 
 void yyerror(const char* message)
 {
 	appendError(SYNTAX, message);
+	success = false;
 }
 
 int main(int argc, char *argv[])    
 {
-	firstLine();
-	yyparse();
-	lastLine();
-	return 0;
+    firstLine();
+    yyparse();
+    lastLine();
+    
+    if (success) {
+        cout << "Compiled Successfully"<<endl;
+    }
+    return 0;
 }
