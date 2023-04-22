@@ -21,7 +21,6 @@ void yyerror(const char* message);
 Symbols<int> symbols;
 int result;
 bool success = true;
-
 %}
 
 %define parse.error verbose
@@ -47,7 +46,7 @@ bool success = true;
 %token BEGIN_ BOOLEAN END ENDREDUCE FUNCTION INTEGER REAL REDUCE RETURNS
 %token ASSIGNMENT
 %token IF THEN ELSE ENDIF
-%token CASE WHEN ARROW OTHERWISE 
+%token <value> CASE WHEN ARROW OTHERWISE 
 %token ENDCASE
 %token WHILE DO
 %token FOR BY
@@ -55,7 +54,7 @@ bool success = true;
 %token NULL_STATEMENT
 %token statement_seq
 
-%type <value> statement_ statement
+%type <value> statement_ statement 
 
 %type <value> program  case_list body reductions expression relation term 
         factor primary    
@@ -73,17 +72,21 @@ bool success = true;
 %nonassoc NOTOP
 %left REMOP
 %right EXP
-
+%{
+int arg1, arg2;
+bool arg1_set = false, arg2_set = false;
+%}
 
 %%
+
 
 program:
     /* empty */ {$$ = 0;} |
     program function {$$ = 0;} ;
 
 function:	
-    function_header optional_variable body {result = $3;} ;
-    
+    function_header optional_variable body {result = $3; } ;
+    %printer { fprintf (yyo, "\"%s\"", $$); } body ;
 function_header:	
     FUNCTION IDENTIFIER parameters RETURNS type ';' ;
     
@@ -135,22 +138,22 @@ relation:
 
 term:
     factor |
-    term ADDOP factor {$$ = evaluateAddition($1, $3, $2);} |
-	term MULOP  factor {$$ = evaluateMultiplication($1 , $3 , $2);} |
-	term REMOP  factor {$$ = evaluateRemainder($1,$2,$3);};
+    term ADDOP factor {result  += $$ = evaluateAddition($1, $3, $2);} |
+	term MULOP  factor {result  += $$ = evaluateMultiplication($1 , $3 , $2);} |
+	term REMOP  factor {result  += $$ = evaluateRemainder($1,$2,$3);};
 
 factor:
     primary |
-    factor MULOP primary {$$ = evaluateMultiplication($1, $3, $2);} |
-	factor REMOP primary {$$ =  evaluateRemainder($1,$2,$3);} ;
+    factor MULOP primary {result  += $$ = evaluateMultiplication($1, $3, $2);} |
+	factor REMOP primary {result  += $$ =  evaluateRemainder($1,$2,$3);} ;
 
 primary:
-    IDENTIFIER |
     INT_LITERAL {$$ = $1;} |
     REAL_LITERAL {$$ = $1;} |
     BOOL_LITERAL {$$ = $1;} |
 	primary EXP primary |
     '(' expression ')' {$$ = $2;} |
+	IDENTIFIER |
     ADDOP primary {$$ = evaluateUnaryPlus($2);} |
     NOTOP primary {$$ = evaluateUnaryNot($2);} ;
 
@@ -179,17 +182,33 @@ case_list:
 
 %%
 
-int main()
+int main(int argc, char* argv[])
 {
-	firstLine();
-    yyparse();
-    if (lastLine() == 0){
-        cout << "Successful compilation" << endl;
-		cout << "Result = " << result << endl;
+    int a,b;
+    // Set values of function parameters
+	if(argc>1){
+     a = stoi(argv[1]);
+	 cout<<"a = "<<a<<endl;
+	if(argc  >2)
+    	 b = stoi(argv[2]);
+		cout<<"b = "<<b<<endl;
+
 	}
-    else
-        cout << "Compilation failed" << endl;
-    return 0;
+
+
+
+    // Parse program and execute function
+    firstLine();
+	 yyparse();
+
+    // Output result
+    if (lastLine() == 0)
+    {
+        cout << "Compiled Successfully" << endl;
+        cout << "Result = " << result << endl;
+    }
+
+    return success ? 0 : 1;
 }
 
 void yyerror(const char* message)

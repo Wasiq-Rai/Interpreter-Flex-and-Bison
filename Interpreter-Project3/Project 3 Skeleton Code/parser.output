@@ -75,12 +75,12 @@ Grammar
    37       | factor MULOP primary
    38       | factor REMOP primary
 
-   39 primary: IDENTIFIER
-   40        | INT_LITERAL
-   41        | REAL_LITERAL
-   42        | BOOL_LITERAL
-   43        | primary EXP primary
-   44        | '(' expression ')'
+   39 primary: INT_LITERAL
+   40        | REAL_LITERAL
+   41        | BOOL_LITERAL
+   42        | primary EXP primary
+   43        | '(' expression ')'
+   44        | IDENTIFIER
    45        | ADDOP primary
    46        | NOTOP primary
 
@@ -103,16 +103,16 @@ Grammar
 Terminals, with rules where they appear
 
     $end (0) 0
-    '(' (40) 44
-    ')' (41) 44
+    '(' (40) 43
+    ')' (41) 43
     ',' (44) 12
     ':' (58) 9 12 13
     ';' (59) 4 9 17 18 19 20
     error (256) 20
-    IDENTIFIER <iden> (258) 4 8 9 12 13 39
-    INT_LITERAL <value> (259) 40 57
-    REAL_LITERAL <realValue> (260) 41
-    BOOL_LITERAL <boolValue> (261) 42
+    IDENTIFIER <iden> (258) 4 8 9 12 13 44
+    INT_LITERAL <value> (259) 39 57
+    REAL_LITERAL <realValue> (260) 40
+    BOOL_LITERAL <boolValue> (261) 41
     ADDOP <oper> (262) 33 45 49
     MULOP <oper> (263) 34 37 50
     RELOP <oper> (264) 31 52
@@ -120,7 +120,7 @@ Terminals, with rules where they appear
     OROP <oper> (266) 28 54
     NOTOP <oper> (267) 29 46 53
     REMOP <oper> (268) 35 38 51
-    EXP <oper> (269) 43 56
+    EXP <oper> (269) 42 56
     IS (270) 9 24
     BEGIN_ (271) 17
     BOOLEAN (272) 15
@@ -136,10 +136,10 @@ Terminals, with rules where they appear
     THEN (282) 23
     ELSE (283) 23
     ENDIF (284) 23
-    CASE (285) 24
-    WHEN (286) 57
-    ARROW (287) 24 57
-    OTHERWISE (288) 24
+    CASE <value> (285) 24
+    WHEN <value> (286) 57
+    ARROW <value> (287) 24 57
+    OTHERWISE <value> (288) 24
     ENDCASE (289) 24
     WHILE (290)
     DO (291)
@@ -192,7 +192,7 @@ Nonterminals, with rules where they appear
         on right: 9 18 19
     expression <value> (62)
         on left: 26 27 28 29
-        on right: 21 23 24 27 28 44
+        on right: 21 23 24 27 28 43
     relation <value> (63)
         on left: 30 31
         on right: 26 27 28 29 31
@@ -204,7 +204,7 @@ Nonterminals, with rules where they appear
         on right: 32 33 34 35 37 38
     primary <value> (66)
         on left: 39 40 41 42 43 44 45 46
-        on right: 36 37 38 43 45 46
+        on right: 36 37 38 42 45 46
     reductions <value> (67)
         on left: 47 48
         on right: 22 47
@@ -457,30 +457,30 @@ State 24
 
 State 25
 
-   39 primary: IDENTIFIER •
+   44 primary: IDENTIFIER •
 
-    $default  reduce using rule 39 (primary)
+    $default  reduce using rule 44 (primary)
 
 
 State 26
 
-   40 primary: INT_LITERAL •
+   39 primary: INT_LITERAL •
 
-    $default  reduce using rule 40 (primary)
+    $default  reduce using rule 39 (primary)
 
 
 State 27
 
-   41 primary: REAL_LITERAL •
+   40 primary: REAL_LITERAL •
 
-    $default  reduce using rule 41 (primary)
+    $default  reduce using rule 40 (primary)
 
 
 State 28
 
-   42 primary: BOOL_LITERAL •
+   41 primary: BOOL_LITERAL •
 
-    $default  reduce using rule 42 (primary)
+    $default  reduce using rule 41 (primary)
 
 
 State 29
@@ -580,7 +580,7 @@ State 34
 
 State 35
 
-   44 primary: '(' • expression ')'
+   43 primary: '(' • expression ')'
 
     IDENTIFIER    shift, and go to state 25
     INT_LITERAL   shift, and go to state 26
@@ -665,7 +665,7 @@ State 41
 State 42
 
    36 factor: primary •
-   43 primary: primary • EXP primary
+   42 primary: primary • EXP primary
 
     EXP  shift, and go to state 74
 
@@ -741,7 +741,7 @@ State 48
 
 State 49
 
-   43 primary: primary • EXP primary
+   42 primary: primary • EXP primary
    45        | ADDOP primary •
 
     EXP  shift, and go to state 74
@@ -762,7 +762,7 @@ State 50
 State 51
 
    36 factor: primary •
-   43 primary: primary • EXP primary
+   42 primary: primary • EXP primary
    46        | NOTOP primary •
 
     EXP  shift, and go to state 74
@@ -881,7 +881,7 @@ State 63
 
    27 expression: expression • ANDOP relation
    28           | expression • OROP relation
-   44 primary: '(' expression • ')'
+   43 primary: '(' expression • ')'
 
     ANDOP  shift, and go to state 66
     OROP   shift, and go to state 67
@@ -1075,7 +1075,7 @@ State 73
 
 State 74
 
-   43 primary: primary EXP • primary
+   42 primary: primary EXP • primary
 
     IDENTIFIER    shift, and go to state 25
     INT_LITERAL   shift, and go to state 26
@@ -1115,7 +1115,7 @@ State 77
 
 State 78
 
-   43 primary: primary • EXP primary
+   42 primary: primary • EXP primary
    46        | NOTOP primary •
 
     EXP  shift, and go to state 74
@@ -1190,9 +1190,9 @@ State 81
 
 State 82
 
-   44 primary: '(' expression ')' •
+   43 primary: '(' expression ')' •
 
-    $default  reduce using rule 44 (primary)
+    $default  reduce using rule 43 (primary)
 
 
 State 83
@@ -1278,7 +1278,7 @@ State 90
 State 91
 
    37 factor: factor MULOP primary •
-   43 primary: primary • EXP primary
+   42 primary: primary • EXP primary
 
     EXP  shift, and go to state 74
 
@@ -1288,7 +1288,7 @@ State 91
 State 92
 
    38 factor: factor REMOP primary •
-   43 primary: primary • EXP primary
+   42 primary: primary • EXP primary
 
     EXP  shift, and go to state 74
 
@@ -1297,12 +1297,12 @@ State 92
 
 State 93
 
-   43 primary: primary • EXP primary
-   43        | primary EXP primary •
+   42 primary: primary • EXP primary
+   42        | primary EXP primary •
 
     EXP  shift, and go to state 74
 
-    $default  reduce using rule 43 (primary)
+    $default  reduce using rule 42 (primary)
 
 
 State 94

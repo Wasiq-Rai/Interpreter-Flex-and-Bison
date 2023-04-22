@@ -89,8 +89,7 @@ Symbols<int> symbols;
 int result;
 bool success = true;
 
-
-#line 94 "parser.tab.c"
+#line 93 "parser.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -192,6 +191,13 @@ enum yysymbol_kind_t
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
 
+/* Second part of user prologue.  */
+#line 75 "parser.y"
+
+int arg1, arg2;
+bool arg1_set = false, arg2_set = false;
+
+#line 201 "parser.tab.c"
 
 
 #ifdef short
@@ -577,12 +583,12 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    81,    81,    82,    85,    88,    91,    91,    91,    95,
-      96,    98,   100,   103,   104,   107,   108,   109,   112,   115,
-     116,   117,   120,   121,   122,   123,   124,   127,   128,   129,
-     130,   133,   134,   137,   138,   139,   140,   143,   144,   145,
-     148,   149,   150,   151,   152,   153,   154,   155,   161,   162,
-     165,   166,   167,   168,   169,   170,   171,   172,   175,   175
+       0,    84,    84,    85,    88,    91,    94,    94,    94,    98,
+      99,   101,   103,   106,   107,   110,   111,   112,   115,   118,
+     119,   120,   123,   124,   125,   126,   127,   130,   131,   132,
+     133,   136,   137,   140,   141,   142,   143,   146,   147,   148,
+     151,   152,   153,   154,   155,   156,   157,   158,   164,   165,
+     168,   169,   170,   171,   172,   173,   174,   175,   178,   178
 };
 #endif
 
@@ -654,14 +660,14 @@ static const yytype_int8 yydefact[] =
 {
        2,     0,     1,     0,     3,     8,    11,     9,     0,     6,
        0,     0,    12,     0,     0,     4,     7,     0,     0,     0,
-      16,    15,    17,     0,     0,    40,    41,    42,    43,     0,
+      16,    15,    17,     0,     0,    45,    40,    41,    42,     0,
        0,     0,     0,     0,    26,     0,     0,     0,    22,    27,
       31,    33,    37,    14,     0,     0,     0,    21,     0,    46,
       30,    37,    50,    51,    53,    56,    55,    54,    52,    57,
       49,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     5,     0,     0,    47,     0,
-       0,    59,    45,    18,    20,    28,    29,    32,    34,    35,
-      36,    38,    39,    44,    13,    10,    23,    48,     0,     0,
+       0,    59,    44,    18,    20,    28,    29,    32,    34,    35,
+      36,    38,    39,    43,    13,    10,    23,    48,     0,     0,
        0,     0,     0,     0,     0,     0,     0,    24,    59,     0,
       58,    25
 };
@@ -759,7 +765,7 @@ static const yytype_int8 yyr2[] =
        6,     0,     1,     5,     3,     1,     1,     1,     4,     2,
        3,     2,     1,     4,     7,     8,     1,     1,     3,     3,
        2,     1,     3,     1,     3,     3,     3,     1,     3,     3,
-       1,     1,     1,     1,     3,     3,     2,     2,     2,     0,
+       1,     1,     1,     3,     3,     1,     2,     2,     2,     0,
        1,     1,     1,     1,     1,     1,     1,     1,     5,     0
 };
 
@@ -841,7 +847,17 @@ yy_symbol_value_print (FILE *yyo,
   if (!yyvaluep)
     return;
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YY_USE (yykind);
+  switch (yykind)
+    {
+    case YYSYMBOL_body: /* body  */
+#line 89 "parser.y"
+             { fprintf (yyo, "\"%s\"", ((*yyvaluep).value)); }
+#line 856 "parser.tab.c"
+        break;
+
+      default:
+        break;
+    }
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
@@ -1494,169 +1510,169 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: %empty  */
-#line 81 "parser.y"
+#line 84 "parser.y"
                 {(yyval.value) = 0;}
-#line 1500 "parser.tab.c"
+#line 1516 "parser.tab.c"
     break;
 
   case 3: /* program: program function  */
-#line 82 "parser.y"
+#line 85 "parser.y"
                      {(yyval.value) = 0;}
-#line 1506 "parser.tab.c"
+#line 1522 "parser.tab.c"
     break;
 
   case 4: /* function: function_header optional_variable body  */
-#line 85 "parser.y"
-                                           {result = (yyvsp[0].value);}
-#line 1512 "parser.tab.c"
+#line 88 "parser.y"
+                                           {result = (yyvsp[0].value); }
+#line 1528 "parser.tab.c"
     break;
 
   case 10: /* variable: IDENTIFIER ':' type IS statement ';'  */
-#line 96 "parser.y"
+#line 99 "parser.y"
                                          {symbols.insert((yyvsp[-5].iden), (yyvsp[-1].value));}
-#line 1518 "parser.tab.c"
+#line 1534 "parser.tab.c"
     break;
 
   case 18: /* body: BEGIN_ statement_ END ';'  */
-#line 112 "parser.y"
+#line 115 "parser.y"
                               {(yyval.value) = (yyvsp[-2].value);}
-#line 1524 "parser.tab.c"
+#line 1540 "parser.tab.c"
     break;
 
   case 21: /* statement_: error ';'  */
-#line 117 "parser.y"
+#line 120 "parser.y"
               {(yyval.value) = 0;}
-#line 1530 "parser.tab.c"
+#line 1546 "parser.tab.c"
     break;
 
   case 23: /* statement: REDUCE operator reductions ENDREDUCE  */
-#line 121 "parser.y"
+#line 124 "parser.y"
                                          {(yyval.value) = (yyvsp[-1].value);}
-#line 1536 "parser.tab.c"
+#line 1552 "parser.tab.c"
     break;
 
   case 24: /* statement: IF expression THEN statement_ ELSE statement_ ENDIF  */
-#line 122 "parser.y"
+#line 125 "parser.y"
                                                             {(yyval.value) = evaluateIfElse((yyvsp[-5].value), (yyvsp[-3].value), (yyvsp[-1].value));}
-#line 1542 "parser.tab.c"
+#line 1558 "parser.tab.c"
     break;
 
   case 25: /* statement: CASE expression IS case_list OTHERWISE ARROW statement_ ENDCASE  */
-#line 123 "parser.y"
+#line 126 "parser.y"
                                                                     {(yyval.value) = evaluateCase((yyvsp[-6].value), (yyvsp[-4].value),  (yyvsp[-2].value));}
-#line 1548 "parser.tab.c"
+#line 1564 "parser.tab.c"
     break;
 
   case 26: /* statement: NULL_STATEMENT  */
-#line 124 "parser.y"
+#line 127 "parser.y"
                    {(yyval.value) = 0;}
-#line 1554 "parser.tab.c"
+#line 1570 "parser.tab.c"
     break;
 
   case 28: /* expression: expression ANDOP relation  */
-#line 128 "parser.y"
+#line 131 "parser.y"
                               {(yyval.value) = evaluateAnd((yyvsp[-2].value), (yyvsp[0].value));}
-#line 1560 "parser.tab.c"
+#line 1576 "parser.tab.c"
     break;
 
   case 29: /* expression: expression OROP relation  */
-#line 129 "parser.y"
+#line 132 "parser.y"
                              {(yyval.value) = evaluateOr((yyvsp[-2].value), (yyvsp[0].value));}
-#line 1566 "parser.tab.c"
+#line 1582 "parser.tab.c"
     break;
 
   case 30: /* expression: NOTOP relation  */
-#line 130 "parser.y"
+#line 133 "parser.y"
                    {(yyval.value) = evaluateNot((yyvsp[0].value));}
-#line 1572 "parser.tab.c"
+#line 1588 "parser.tab.c"
     break;
 
   case 32: /* relation: relation RELOP term  */
-#line 134 "parser.y"
+#line 137 "parser.y"
                         {(yyval.value) = evaluateRelational((yyvsp[-2].value), (yyvsp[-1].oper), (yyvsp[0].value));}
-#line 1578 "parser.tab.c"
+#line 1594 "parser.tab.c"
     break;
 
   case 34: /* term: term ADDOP factor  */
-#line 138 "parser.y"
-                      {(yyval.value) = evaluateAddition((yyvsp[-2].value), (yyvsp[0].value), (yyvsp[-1].oper));}
-#line 1584 "parser.tab.c"
+#line 141 "parser.y"
+                      {result  += (yyval.value) = evaluateAddition((yyvsp[-2].value), (yyvsp[0].value), (yyvsp[-1].oper));}
+#line 1600 "parser.tab.c"
     break;
 
   case 35: /* term: term MULOP factor  */
-#line 139 "parser.y"
-                           {(yyval.value) = evaluateMultiplication((yyvsp[-2].value) , (yyvsp[0].value) , (yyvsp[-1].oper));}
-#line 1590 "parser.tab.c"
+#line 142 "parser.y"
+                           {result  += (yyval.value) = evaluateMultiplication((yyvsp[-2].value) , (yyvsp[0].value) , (yyvsp[-1].oper));}
+#line 1606 "parser.tab.c"
     break;
 
   case 36: /* term: term REMOP factor  */
-#line 140 "parser.y"
-                           {(yyval.value) = evaluateRemainder((yyvsp[-2].value),(yyvsp[-1].oper),(yyvsp[0].value));}
-#line 1596 "parser.tab.c"
+#line 143 "parser.y"
+                           {result  += (yyval.value) = evaluateRemainder((yyvsp[-2].value),(yyvsp[-1].oper),(yyvsp[0].value));}
+#line 1612 "parser.tab.c"
     break;
 
   case 38: /* factor: factor MULOP primary  */
-#line 144 "parser.y"
-                         {(yyval.value) = evaluateMultiplication((yyvsp[-2].value), (yyvsp[0].value), (yyvsp[-1].oper));}
-#line 1602 "parser.tab.c"
+#line 147 "parser.y"
+                         {result  += (yyval.value) = evaluateMultiplication((yyvsp[-2].value), (yyvsp[0].value), (yyvsp[-1].oper));}
+#line 1618 "parser.tab.c"
     break;
 
   case 39: /* factor: factor REMOP primary  */
-#line 145 "parser.y"
-                             {(yyval.value) =  evaluateRemainder((yyvsp[-2].value),(yyvsp[-1].oper),(yyvsp[0].value));}
-#line 1608 "parser.tab.c"
+#line 148 "parser.y"
+                             {result  += (yyval.value) =  evaluateRemainder((yyvsp[-2].value),(yyvsp[-1].oper),(yyvsp[0].value));}
+#line 1624 "parser.tab.c"
     break;
 
-  case 41: /* primary: INT_LITERAL  */
-#line 149 "parser.y"
-                {(yyval.value) = (yyvsp[0].value);}
-#line 1614 "parser.tab.c"
-    break;
-
-  case 42: /* primary: REAL_LITERAL  */
-#line 150 "parser.y"
-                 {(yyval.value) = (yyvsp[0].realValue);}
-#line 1620 "parser.tab.c"
-    break;
-
-  case 43: /* primary: BOOL_LITERAL  */
+  case 40: /* primary: INT_LITERAL  */
 #line 151 "parser.y"
-                 {(yyval.value) = (yyvsp[0].boolValue);}
-#line 1626 "parser.tab.c"
+                {(yyval.value) = (yyvsp[0].value);}
+#line 1630 "parser.tab.c"
     break;
 
-  case 45: /* primary: '(' expression ')'  */
+  case 41: /* primary: REAL_LITERAL  */
+#line 152 "parser.y"
+                 {(yyval.value) = (yyvsp[0].realValue);}
+#line 1636 "parser.tab.c"
+    break;
+
+  case 42: /* primary: BOOL_LITERAL  */
 #line 153 "parser.y"
+                 {(yyval.value) = (yyvsp[0].boolValue);}
+#line 1642 "parser.tab.c"
+    break;
+
+  case 44: /* primary: '(' expression ')'  */
+#line 155 "parser.y"
                        {(yyval.value) = (yyvsp[-1].value);}
-#line 1632 "parser.tab.c"
+#line 1648 "parser.tab.c"
     break;
 
   case 46: /* primary: ADDOP primary  */
-#line 154 "parser.y"
+#line 157 "parser.y"
                   {(yyval.value) = evaluateUnaryPlus((yyvsp[0].value));}
-#line 1638 "parser.tab.c"
+#line 1654 "parser.tab.c"
     break;
 
   case 47: /* primary: NOTOP primary  */
-#line 155 "parser.y"
+#line 158 "parser.y"
                   {(yyval.value) = evaluateUnaryNot((yyvsp[0].value));}
-#line 1644 "parser.tab.c"
+#line 1660 "parser.tab.c"
     break;
 
   case 48: /* reductions: reductions statement_  */
-#line 161 "parser.y"
+#line 164 "parser.y"
                               {(yyval.value) = evaluateReduction((yyvsp[-2].oper), (yyvsp[-1].value), (yyvsp[0].value));}
-#line 1650 "parser.tab.c"
+#line 1666 "parser.tab.c"
     break;
 
   case 49: /* reductions: %empty  */
-#line 162 "parser.y"
+#line 165 "parser.y"
         {(yyval.value) = (yyvsp[0].oper) == ADD ? 0 : 1;}
-#line 1656 "parser.tab.c"
+#line 1672 "parser.tab.c"
     break;
 
 
-#line 1660 "parser.tab.c"
+#line 1676 "parser.tab.c"
 
       default: break;
     }
@@ -1880,20 +1896,36 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 180 "parser.y"
+#line 183 "parser.y"
 
 
-int main()
+int main(int argc, char* argv[])
 {
-	firstLine();
-    yyparse();
-    if (lastLine() == 0){
-        cout << "Successful compilation" << endl;
-		cout << "Result = " << result << endl;
+    int a,b;
+    // Set values of function parameters
+	if(argc>1){
+     a = stoi(argv[1]);
+	 cout<<"a = "<<a<<endl;
+	if(argc  >2)
+    	 b = stoi(argv[2]);
+		cout<<"b = "<<b<<endl;
+
 	}
-    else
-        cout << "Compilation failed" << endl;
-    return 0;
+
+
+
+    // Parse program and execute function
+    firstLine();
+	 yyparse();
+
+    // Output result
+    if (lastLine() == 0)
+    {
+        cout << "Compiled Successfully" << endl;
+        cout << "Result = " << result << endl;
+    }
+
+    return success ? 0 : 1;
 }
 
 void yyerror(const char* message)
