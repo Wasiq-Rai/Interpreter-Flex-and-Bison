@@ -1,114 +1,202 @@
-/* Compiler Theory and Design
-   Duane J. Jarc */
+/* Compiler Theory and Design Duane J. Jarc */
 
 %{
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <map>
+#include <cmath>
 
 using namespace std;
 
 #include "types.h"
 #include "listing.h"
 #include "symbols.h"
+#include "values.h"
 
 int yylex();
 void yyerror(const char* message);
 
 Symbols<Types> symbols;
+Symbols<int> ints;
+Symbols<double> reals;
+Symbols<bool> bools;
 
+int result;
+bool success = true;
 %}
 
 %define parse.error verbose
 
 %union
 {
-	CharPtr iden;
-	Types type;
+    Types type;
+    CharPtr iden;
+    Operators oper;
+    double realValue;
+    bool boolValue;
 }
 
 %token <iden> IDENTIFIER
 %token <type> INT_LITERAL
+%token <type> REAL_LITERAL
+%token <type> BOOL_LITERAL
 
-%token ADDOP MULOP RELOP ANDOP
-%token BEGIN_ BOOLEAN END ENDREDUCE FUNCTION INTEGER IS REDUCE RETURNS
+%token <oper> ADDOP MULOP RELOP ANDOP OROP NOTOP REMOP EXP
+%token IS
+%token BEGIN_ BOOLEAN END ENDREDUCE FUNCTION INTEGER REAL REDUCE RETURNS
+%token ASSIGNMENT
+%token IF THEN ELSE ENDIF
+%token <type> CASE WHEN ARROW OTHERWISE
+%token ENDCASE
+%token WHILE DO
+%token FOR BY
+%token REPEAT UNTIL
+%token NULL_STATEMENT
 
-%type <type> type statement statement_ reductions expression relation term
-	factor primary
+%type <type> statement_ statement 
+%type <type> type
+%type <type>   case_list body reductions expression relation term variable
+        factor primary    
+%type <oper> operator
+
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
+%nonassoc LOWER_THAN_REDUCE
+%left ADDOP
+%left MULOP
+%left RELOP
+%left ANDOP
+%left OROP
+%nonassoc NOTOP
+%left REMOP
+%right EXP
+%{
+int arg1, arg2;
+bool arg1_set = false, arg2_set = false;
+%}
 
 %%
 
+
+
 function:	
-	function_header optional_variable body ;
-	
+    function_header optional_variable body {result = $3; } ;
+
 function_header:	
-	FUNCTION IDENTIFIER RETURNS type ';';
-
+    FUNCTION IDENTIFIER parameters RETURNS type ';' ;
+    
 optional_variable:
-	variable |
-	;
+    variable | variable optional_variable |  
+    ;
+    
+variable:
+	IDENTIFIER ':' type IS statement_ {checkAssignment($3, $5, "Variable Initialization"); ints.insert($1, $5);} |
+    IDENTIFIER ':' type ASSIGNMENT primary ';' {ints.insert($1, $3);} |
+    IDENTIFIER ':' BOOLEAN IS statement_ {checkAssignment(BOOL_TYPE, $5, "Variable Initialization"); bools.insert($1, $5);} |
+    IDENTIFIER {if (!symbols.find($1,$$)) appendError(UNDECLARED, $1);} |
+    IDENTIFIER ASSIGNMENT expression {symbols.insert($1, $3);$$ = $3;} |
+    IDENTIFIER ':' type IS statement ';' {checkAssignment($3, $5, "Variable Initialization");symbols.insert($1, $3);ints.insert($1, $5);} ;
 
-variable:	
-	IDENTIFIER ':' type IS statement_ 
-		{checkAssignment($3, $5, "Variable Initialization");
-		symbols.insert($1, $3);} ;
+parameters:
+    /* empty */ |
+    parameters_list ;
+
+parameters_list:
+    parameters_list ',' IDENTIFIER ':' type   |
+    IDENTIFIER ':' type   ;
 
 type:
 	INTEGER {$$ = INT_TYPE;} |
-	BOOLEAN {$$ = BOOL_TYPE;} ;
+	BOOLEAN {$$ = BOOL_TYPE;} |
+    REAL {$$ = REAL_TYPE;};
 
 body:
-	BEGIN_ statement_ END ';' ;
+    BEGIN_ statement_ END ';' {$$ = $2;} ;
     
-statement_:
-	statement ';' |
-	error ';' {$$ = MISMATCH;} ;
-	
-statement:
-	expression |
-	REDUCE operator reductions ENDREDUCE {$$ = $3;} ;
-
-operator:
-	ADDOP |
-	MULOP ;
-
-reductions:
-	reductions statement_ {$$ = checkArithmetic($1, $2);} |
-	{$$ = INT_TYPE;} ;
-		    
 expression:
-	expression ANDOP relation {$$ = checkLogical($1, $3);} |
-	relation ;
+    expression OROP relation {$$ = checkLogical($1, $3, OR);} |
+    relation ;
 
 relation:
-	relation RELOP term {$$ = checkRelational($1, $3);}|
-	term ;
+    relation RELOP term {$$ = checkRelational($1, $3);} |
+    term ;
 
 term:
-	term ADDOP factor {$$ = checkArithmetic($1, $3);} |
-	factor ;
-      
+    term ADDOP factor {$$ = checkArithmetic($1, $3);} |
+    factor ;
+
 factor:
-	factor MULOP primary  {$$ = checkArithmetic($1, $3);} |
-	primary ;
+    factor MULOP primary {$$ = checkArithmetic($1, $3);} |
+    primary ;
 
 primary:
-	'(' expression ')' {$$ = $2;} |
-	INT_LITERAL |
-	IDENTIFIER {if (!symbols.find($1, $$)) appendError(UNDECLARED, $1);} ;
-    
+    '(' expression ')' {$$= $2;} |
+    INT_LITERAL {$$ = $1;}|
+    REAL_LITERAL {$$ = $1;}|
+    BOOL_LITERAL {$$ = $1;}|
+    IDENTIFIER {if (!symbols.find($1,$$)) appendError(UNDECLARED, $1);} ;
+
+operator:
+    ADDOP |
+    MULOP |
+    RELOP |
+    ANDOP |
+    OROP |
+    NOTOP |
+    REMOP |
+    EXP ;
+
+
+
+reductions:
+    reductions statement_ { $$= checkArithmetic($1, $2);} |
+    { $$= INT_TYPE;} ;
+
+case_list:
+    CASE expression WHEN statement_ ARROW statement_
+    {checkTypeCompatibility($2, $4);
+    checkTypeCompatibility($2, $6);} |
+    CASE expression WHEN statement_ ARROW statement_ case_list
+    {checkTypeCompatibility($2, $4);
+    checkTypeCompatibility($2, $6);} ;
+
+statement_:
+    statement |
+    statement ';' statement_ |
+    error ';' {$$ = MISMATCH;} ;
+
+
+statement:
+    expression |
+    REDUCE operator reductions ENDREDUCE {$$ = $3;} |
+    IF expression THEN statement_ ENDIF { $$= $4;} |
+    IF expression THEN statement_ ELSE statement_ ENDIF {checkTypeCompatibility($4, $6);} |
+    CASE expression case_list OTHERWISE statement_ ENDCASE {$$ = $3;} 
+    ;
+
 %%
+
+int main(int argc, char* argv[])
+{
+    // Parse program and execute function
+    firstLine();
+	 yyparse();
+
+    // Output result
+    if (lastLine() == 0)
+    {
+        cout << "Compiled Successfully" << endl;
+        cout << "Result = " << result << endl;
+    }
+
+    return success ? 0 : 1;
+}
 
 void yyerror(const char* message)
 {
+    success = false;
 	appendError(SYNTAX, message);
+    cout << "Syntax error: " << message << endl;
 }
-
-int main(int argc, char *argv[])    
-{
-	firstLine();
-	yyparse();
-	lastLine();
-	return 0;
-} 
