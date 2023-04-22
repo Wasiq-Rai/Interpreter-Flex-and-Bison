@@ -46,41 +46,95 @@ int evaluateArithmetic(int left, Operators operator_, int right)
 	return result;
 }
 
-//a function to append parameters
-int appendParameter(int left, Operators operator_, int right)
+
+
+// a function to evaluate an if-else statement
+int evaluateIfElse(int left, int middle, int right){
+if (left)
+return middle;
+else
+return right;
+}
+
+// a function to evaluate a case statement
+int evaluateCase(int left, int middle, int right){
+if (left == middle)
+return right;
+else
+return 0;
+}
+
+// a function to evaluate multiplication
+int evaluateMultiplication(int left, int right, Operators operator_ ){
+switch (operator_)
 {
+case MULTIPLY:
+return left * right;
+case DIVIDE:
+return left / right;
+case MODULUS:
+return left % right;
+default:
+return 0;
+}
+}
+
+// a function to evaluate unary plus
+int evaluateUnaryPlus(int digit){
+return digit;
+}
+
+// a function to evaluate unary multiplication
+int evaluateUnaryMultiplication(int digit){
+return digit;
+}
+
+// a function to evaluate unary not
+int evaluateUnaryNot(int digit){
+if (digit)
+return 0;
+else
 return 1;
 }
-int initializeParameter(int left,  int right){
-	return 1;
-};
-int evaluateIfElse(int left, int middle, int right){
-	return 1;
-};
-int evaluateCase(int left, int middle, int right){
-	return 1;
-};
-int evaluateMultiplication(int left,  int right,Operators operator_ ){
-	return 1;
-};
-int evaluateUnaryPlus(int digit){
-	return 1;
-};
-int evaluateUnaryMultiplication(int digit){
-	return 1;
-};
-int evaluateUnaryNot(int digit){
-	return 1;
-};
-int evaluateAddition(int left,  int right,Operators operator_){
-	return 1;
-};
+
+// a function to evaluate addition
+int evaluateAddition(int left, int right, Operators operator_){
+switch (operator_)
+{
+case ADD:
+return left + right;
+case SUBTRACT:
+return left - right;
+default:
+return 0;
+}
+}
+
+// a function to evaluate not
 int evaluateNot(int digit){
-	return 1;
-};
+if (digit)
+return 0;
+else
+return 1;
+}
+
+// a function to evaluate or
 int evaluateOr(int left , int right){
-	return 1;
-};
+if (left || right)
+return 1;
+else
+return 0;
+}
+
+// a function to evaluate and
 int evaluateAnd(int left, int right){
-	return 1;
-};
+if (left && right)
+return 1;
+else
+return 0;
+}
+
+// a function to evaluate remainder
+int evaluateRemainder(int left, Operators operator_, int right){
+return left % right;
+}

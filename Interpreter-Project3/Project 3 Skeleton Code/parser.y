@@ -92,6 +92,7 @@ optional_variable:
     ;
     
 variable:
+	IDENTIFIER  |
     IDENTIFIER ':' type IS statement ';' {symbols.insert($1, $5);} ;
 
 parameters:
@@ -134,17 +135,21 @@ relation:
 
 term:
     factor |
-    term ADDOP factor {$$ = evaluateAddition($1, $3, $2);} ;
+    term ADDOP factor {$$ = evaluateAddition($1, $3, $2);} |
+	term MULOP  factor {$$ = evaluateMultiplication($1 , $3 , $2);} |
+	term REMOP  factor {$$ = evaluateRemainder($1,$2,$3);};
 
 factor:
     primary |
-    factor MULOP primary {$$ = evaluateMultiplication($1, $3, $2);} ;
+    factor MULOP primary {$$ = evaluateMultiplication($1, $3, $2);} |
+	factor REMOP primary {$$ =  evaluateRemainder($1,$2,$3);} ;
 
 primary:
-    IDENTIFIER {if (!symbols.find($1, $$)) appendError(UNDECLARED, $1);}|
+    IDENTIFIER |
     INT_LITERAL {$$ = $1;} |
     REAL_LITERAL {$$ = $1;} |
     BOOL_LITERAL {$$ = $1;} |
+	primary EXP primary |
     '(' expression ')' {$$ = $2;} |
     ADDOP primary {$$ = evaluateUnaryPlus($2);} |
     NOTOP primary {$$ = evaluateUnaryNot($2);} ;
@@ -160,6 +165,7 @@ operator:
     ADDOP |
 	MULOP |
 	REMOP |
+	RELOP |
 	NOTOP |
 	OROP  |
 	ANDOP |
