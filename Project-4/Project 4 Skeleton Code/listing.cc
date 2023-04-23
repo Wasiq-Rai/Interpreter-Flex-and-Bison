@@ -63,7 +63,7 @@ void displayErrors()
 {
 	if (error != "")
 		printf("%s\n", error.c_str());
-	error = "";
+	// error = "";
 }
 void finalError(){
 	printf("     \n");

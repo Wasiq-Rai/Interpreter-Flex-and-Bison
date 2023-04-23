@@ -39,7 +39,7 @@ bool            true|false
 "<"             { ECHO; return(RELOP); }
 "/="            { ECHO; return(RELOP); }
 "**"            { ECHO; return(EXP); }
-"="             { ECHO; return(RELOP); }
+"="             { ECHO; return(ASSIGNMENT); }
 "=>"            { ECHO; return(ARROW); }
 rem             { ECHO; return(REMOP); }
 begin           { ECHO; return(BEGIN_); }
