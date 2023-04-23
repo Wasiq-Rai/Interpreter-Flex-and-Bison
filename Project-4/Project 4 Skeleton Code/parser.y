@@ -13,7 +13,6 @@ using namespace std;
 #include "types.h"
 #include "listing.h"
 #include "symbols.h"
-#include "values.h"
 
 int yylex();
 void yyerror(const char* message);
@@ -50,8 +49,6 @@ bool success = true;
 %token IF THEN ELSE ENDIF
 %token <type> CASE WHEN ARROW OTHERWISE
 %token ENDCASE
-%token WHILE DO
-%token FOR BY
 %token REPEAT UNTIL
 %token NULL_STATEMENT
 
@@ -88,14 +85,12 @@ function_header:
     FUNCTION IDENTIFIER parameters RETURNS type ';' ;
     
 optional_variable:
-    variable | variable optional_variable |  
+    variable optional_variable |  
     ;
     
 variable:
-	IDENTIFIER ':' type IS statement_ {checkAssignment($3, $5, "Variable Initialization"); ints.insert($1, $5);} |
-    IDENTIFIER ':' type ASSIGNMENT primary ';' {ints.insert($1, $3);} |
-    IDENTIFIER ':' BOOLEAN IS statement_ {checkAssignment(BOOL_TYPE, $5, "Variable Initialization"); bools.insert($1, $5);} |
     IDENTIFIER {if (!symbols.find($1,$$)) appendError(UNDECLARED, $1);} |
+    IDENTIFIER ':' type ASSIGNMENT primary ';' {ints.insert($1, $3);} |
     IDENTIFIER ASSIGNMENT expression {symbols.insert($1, $3);$$ = $3;} |
     IDENTIFIER ':' type IS statement ';' {checkAssignment($3, $5, "Variable Initialization");symbols.insert($1, $3);ints.insert($1, $5);} ;
 
@@ -117,6 +112,8 @@ body:
     
 expression:
     expression OROP relation {$$ = checkLogical($1, $3, OR);} |
+    expression ANDOP relation {$$ = checkLogical($1, $3, AND);}  |
+    NOTOP relation  |
     relation ;
 
 relation:
@@ -125,10 +122,13 @@ relation:
 
 term:
     term ADDOP factor {$$ = checkArithmetic($1, $3);} |
+    term MULOP factor {$$ = checkArithmetic($1, $3);} |
+    term REMOP factor {$$ = checkArithmetic($1, $3);} |
     factor ;
 
 factor:
     factor MULOP primary {$$ = checkArithmetic($1, $3);} |
+    factor REMOP primary {$$ = checkArithmetic($1, $3);} |
     primary ;
 
 primary:
@@ -136,6 +136,9 @@ primary:
     INT_LITERAL {$$ = $1;}|
     REAL_LITERAL {$$ = $1;}|
     BOOL_LITERAL {$$ = $1;}|
+    primary EXP primary |
+    ADDOP primary |
+    NOTOP primary |
     IDENTIFIER {if (!symbols.find($1,$$)) appendError(UNDECLARED, $1);} ;
 
 operator:
@@ -155,16 +158,18 @@ reductions:
     { $$= INT_TYPE;} ;
 
 case_list:
+    WHEN INT_LITERAL ARROW statement_ case_list {checkTypeCompatibility($2, $4);} |
+
     CASE expression WHEN statement_ ARROW statement_
     {checkTypeCompatibility($2, $4);
     checkTypeCompatibility($2, $6);} |
     CASE expression WHEN statement_ ARROW statement_ case_list
     {checkTypeCompatibility($2, $4);
-    checkTypeCompatibility($2, $6);} ;
+    checkTypeCompatibility($2, $6);} |
+     ;
 
 statement_:
-    statement |
-    statement ';' statement_ |
+    statement ';' |
     error ';' {$$ = MISMATCH;} ;
 
 
@@ -173,7 +178,7 @@ statement:
     REDUCE operator reductions ENDREDUCE {$$ = $3;} |
     IF expression THEN statement_ ENDIF { $$= $4;} |
     IF expression THEN statement_ ELSE statement_ ENDIF {checkTypeCompatibility($4, $6);} |
-    CASE expression case_list OTHERWISE statement_ ENDCASE {$$ = $3;} 
+    CASE expression IS case_list OTHERWISE ARROW statement_ ENDCASE {$$ = $4;} 
     ;
 
 %%
@@ -184,19 +189,15 @@ int main(int argc, char* argv[])
     firstLine();
 	 yyparse();
 
-    // Output result
-    if (lastLine() == 0)
-    {
-        cout << "Compiled Successfully" << endl;
-        cout << "Result = " << result << endl;
-    }
+    lastLine();
+    finalError();
+    
+    
 
-    return success ? 0 : 1;
+    return 0;
 }
 
 void yyerror(const char* message)
 {
-    success = false;
 	appendError(SYNTAX, message);
-    cout << "Syntax error: " << message << endl;
 }

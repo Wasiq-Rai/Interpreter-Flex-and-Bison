@@ -15,6 +15,12 @@ template <typename T>
 void Symbols<T>::insert(char* lexeme, T entry)
 {
 	string name(lexeme);
+	if (symbols.find(name) != symbols.end()) {
+            // Identifier already exists, so throw an error
+            appendError(DUPLICATE_IDENTIFIER , name);
+        } else {
+            symbols[name] = entry;
+        }
 	symbols[name] = entry;
 }
 

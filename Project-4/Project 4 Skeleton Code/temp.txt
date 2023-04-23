@@ -1,9 +1,30 @@
-Types checkArithmetic(Types left, Types right) {
-    if (left == MISMATCH || right == MISMATCH)
-        return MISMATCH;
-    if (left != INT_TYPE && left != REAL_TYPE || right != INT_TYPE && right != REAL_TYPE) {
-        appendError(GENERAL_SEMANTIC, "Numeric Type Required");
-        return MISMATCH;
-    }
-    return left == REAL_TYPE || right == REAL_TYPE ? REAL_TYPE : INT_TYPE;
-}
+ -- Test of Multiple Semantic Errors
+
+ function test a: integer returns integer;
+
+b: integer is
+
+if a + 5 then
+    2;
+
+else
+    5;
+
+endif;
+
+c: real is 9.8 - 2 + 8;
+
+d: boolean is 7 = f;
+ begin
+ true + 2;
+
+case b is
+
+when 1 => 4.5 + c;
+
+when 2 => b;
+
+others => c;
+
+endcase;
+ end;

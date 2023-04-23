@@ -86,15 +86,11 @@ extern int yydebug;
     ARROW = 287,                   /* ARROW  */
     OTHERWISE = 288,               /* OTHERWISE  */
     ENDCASE = 289,                 /* ENDCASE  */
-    WHILE = 290,                   /* WHILE  */
-    DO = 291,                      /* DO  */
-    FOR = 292,                     /* FOR  */
-    BY = 293,                      /* BY  */
-    REPEAT = 294,                  /* REPEAT  */
-    UNTIL = 295,                   /* UNTIL  */
-    NULL_STATEMENT = 296,          /* NULL_STATEMENT  */
-    LOWER_THAN_ELSE = 297,         /* LOWER_THAN_ELSE  */
-    LOWER_THAN_REDUCE = 298        /* LOWER_THAN_REDUCE  */
+    REPEAT = 290,                  /* REPEAT  */
+    UNTIL = 291,                   /* UNTIL  */
+    NULL_STATEMENT = 292,          /* NULL_STATEMENT  */
+    LOWER_THAN_ELSE = 293,         /* LOWER_THAN_ELSE  */
+    LOWER_THAN_REDUCE = 294        /* LOWER_THAN_REDUCE  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -103,7 +99,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 33 "parser.y"
+#line 32 "parser.y"
 
     Types type;
     CharPtr iden;
@@ -111,7 +107,7 @@ union YYSTYPE
     double realValue;
     bool boolValue;
 
-#line 115 "parser.tab.h"
+#line 111 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

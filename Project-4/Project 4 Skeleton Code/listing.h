@@ -11,4 +11,4 @@ void firstLine();
 void nextLine();
 int lastLine();
 void appendError(ErrorCategories errorCategory, string message);
-
+void finalError();

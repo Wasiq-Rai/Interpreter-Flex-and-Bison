@@ -15,6 +15,10 @@ static int lineNumber;
 static string error = "";
 static int totalErrors = 0;
 
+int semantic_error =0;
+int lexical_error =0;
+int syntax_error =0;
+
 static void displayErrors();
 
 void firstLine()
@@ -45,6 +49,13 @@ void appendError(ErrorCategories errorCategory, string message)
 		"Semantic Error, Undeclared " };
 
 	error = messages[errorCategory] + message;
+	if(errorCategory == LEXICAL)
+		lexical_error++;
+	else if(errorCategory == GENERAL_SEMANTIC)
+		semantic_error++;
+	else if(errorCategory == SYNTAX)
+		syntax_error++;
+
 	totalErrors++;
 }
 
@@ -53,4 +64,12 @@ void displayErrors()
 	if (error != "")
 		printf("%s\n", error.c_str());
 	error = "";
+}
+void finalError(){
+	printf("     \n");
+    printf("Total Errors %d\n", totalErrors);
+
+    printf("Lexical Errors %d\n", lexical_error);
+    printf("Syntax Errors %d\n", syntax_error);
+    printf("Semantic Errors %d\n", semantic_error);
 }
